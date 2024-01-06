@@ -24,7 +24,18 @@ EOF
 locale-gen $LXC_LOCALE 
 
 # Generate sources
-if [ "$LXC_TEMPLATE_VERSION" == "debian-11-standard" ] ; then
+if [ "$LXC_TEMPLATE_VERSION" == "debian-12-standard" ] ; then
+
+cat << EOF > /etc/apt/sources.list
+deb http://debian.inf.tu-dresden.de/debian bookworm main contrib
+
+deb http://debian.inf.tu-dresden.de/debian bookworm-updates main contrib
+
+# security updates
+deb http://debian.inf.tu-dresden.de/debian-security bookworm-security main contrib
+EOF
+
+elif [ "$LXC_TEMPLATE_VERSION" == "debian-11-standard" ] ; then
 
 cat << EOF > /etc/apt/sources.list
 deb http://debian.inf.tu-dresden.de/debian bullseye main contrib
