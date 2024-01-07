@@ -61,13 +61,13 @@ if [[ "$service" == "ask" ]]; then
        for line in $OPTS; do
         if [[ "$svc" == "$line" ]]; then
           service=$svc
-          echo "Installation of $service selected."
+          echo "============ Installation of $service selected. ============"
           valid=1
           break
         fi
       done
     else
-      echo "Selected 'quit' exiting without action..."
+      echo "============ Selected 'quit' exiting without action... ============"
       exit 0
     fi
     if [[ "$valid" == "1" ]]; then
@@ -77,7 +77,7 @@ if [[ "$service" == "ask" ]]; then
 else
   for line in $OPTS; do
     if [[ "$service" == "$line" ]]; then
-      echo "Installation of $service selected."
+      echo "============ Installation of $service selected. ============"
       valid=1
       break
     fi
@@ -85,14 +85,14 @@ else
 fi
 
 if [[ "$valid" != "1" ]]; then
-  echo "Invalid option, exiting..."
+  echo "============ Invalid option, exiting... ============"
   usage 1
 fi
 
 # Load configuration file
-echo "Loading config file '$config'..."
+echo "============ Loading config file '$config'... ============"
 if [ ! -e "$config" ]; then
-  echo "Configuration files does not exist"
+  echo "============ Configuration files does not exist ============"
   exit 1
 fi
 
@@ -128,7 +128,7 @@ if  [ $LXC_CHK -lt 100 ] || [ -f /etc/pve/qemu-server/$LXC_CHK.conf ]; then
 else
   LXC_NBR=$LXC_CHK;
 fi
-echo "Will now create LXC Container $LXC_NBR!";
+echo "============ Will now create LXC Container $LXC_NBR! ============";
 
 # Create the container
 pct create $LXC_NBR $TAGS --password $LXC_PWD -unprivileged $LXC_UNPRIVILEGED $LXC_TEMPLATE_STORAGE:vztmpl/$TMPL_NAME -rootfs $LXC_ROOTFS_STORAGE:$LXC_ROOTFS_SIZE;
@@ -136,7 +136,7 @@ sleep 2;
 
 # Check vlan configuration
 if [[ $LXC_VLAN != "NONE" ]];then VLAN=",tag=$LXC_VLAN"; else VLAN=""; fi
-# Reconfigure conatiner
+# Reconfigure container
 pct set $LXC_NBR -memory $LXC_MEM -swap $LXC_SWAP -hostname $LXC_HOSTNAME -onboot 1 -timezone $LXC_TIMEZONE -features nesting=$LXC_NESTING;
 if [ $LXC_DHCP == true ]; then
  pct set $LXC_NBR -net0 "name=eth0,bridge=$LXC_BRIDGE,ip=dhcp,type=veth$VLAN"
@@ -168,9 +168,9 @@ pct push $LXC_NBR "$PWD/src/$service/constants-service.conf" /root/constants-ser
 
 if [ $debug -gt 0 ]; then dbg=-vx; else dbg=""; fi
 
-echo "Installing basic container setup..."
+echo "============ Installing basic container setup... ============"
 pct exec $LXC_NBR -- su - root -c "bash $dbg /root/lxc-base.sh"
-echo "Install '$service'!"
+echo "============ Install '$service'! ============"
 pct exec $LXC_NBR -- su - root -c "bash $dbg /root/install-service.sh"
 
 pct shutdown $LXC_NBR

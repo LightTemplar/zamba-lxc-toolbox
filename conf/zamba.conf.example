@@ -144,6 +144,15 @@ NEXTCLOUD_DATA="nc_data"
 # Defines the trusted reverse proxy, which will enable the detection of source ip to fail2ban
 NEXTCLOUD_REVPROX="192.168.100.254"
 
+# LDAP part
+NEXTCLOUD_LDAP = true
+NEXTCLOUD_LDAP_SERVER = "zmb-ad.$LXC_DOMAIN"
+NEXTCLOUD_LDAP_AGENT_LOGIN = "ro_admin"
+NEXTCLOUD_LDAP_AGENT_PASSWORD = ""
+NEXTCLOUD_LDAP_USERS_GROUP = "nextcloud_users"
+
+NEXTCLOUD_LDAP_GROUP = 
+
 ############### Check_MK-Section ###############
 
 # Define the name of your checkmk instance

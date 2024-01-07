@@ -272,7 +272,7 @@ echo "vm.overcommit_memory = 1" >> /etc/sysctl.conf
 systemctl restart redis
 
 #### HIER MÜSSTE EIN REBOOT REIN ####
-
+systemctl daemon-reload
 
 #### Install nextcloud ####
 
@@ -327,7 +327,6 @@ systemctl restart fail2ban
 #### Create configuration script for nextcloud, which will be executet as user www-data
 
 cat > /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/config_nextcloud.sh << DFOE
-
 #!/bin/bash 
 
 php /var/www/nextcloud/occ maintenance:install --database pgsql \
@@ -415,13 +414,71 @@ php /var/www/nextcloud/occ app:disable firstrunwizard
 php /var/www/nextcloud/occ app:enable admin_audit
 php /var/www/nextcloud/occ app:enable notify_push
 php /var/www/nextcloud/occ app:enable files_pdfviewer
+php /var/www/nextcloud/occ db:add-missing-indices
 php /var/www/nextcloud/occ background:cron
+DFOE
+
+LXC_DOMAIN_LDAP_FORMAT = $(convert_domain_to_ldap_format "$LXC_DOMAIN")
+
+cat > /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/setup_ldap.sh << DFOE
+#!/bin/bash 
+# https://github.com/lldap/lldap/blob/main/example_configs/nextcloud.md
+# php /var/www/nextcloud/occ app:install user_ldap
+php /var/www/nextcloud/occ app:enable user_ldap
+php /var/www/nextcloud/occ ldap:create-empty-config
+
+# EDIT: domain
+php /var/www/nextcloud/occ ldap:set-config s01 ldapHost "ldap://$NEXTCLOUD_LDAP_SERVER."
+php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 3890
+# EDIT: admin user
+php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "uid=ro_admin,ou=people,$LXC_DOMAIN_LDAP_FORMAT"
+# EDIT: password
+php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$NEXTCLOUD_LDAP_AGENT_PASSWORD"
+# EDIT: Base DN
+php /var/www/nextcloud/occ ldap:set-config s01 ldapBase "$LXC_DOMAIN_LDAP_FORMAT"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseUsers "$LXC_DOMAIN_LDAP_FORMAT"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "$LXC_DOMAIN_LDAP_FORMAT"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
+php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(objectclass=person)(uid=%uid))"
+# EDIT: nextcloud_users group, contains the users who can login to Nextcloud
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(&(objectclass=person)(memberOf=cn=$NEXTCLOUD_LDAP_USERS_GROUP,ou=groups,$LXC_DOMAIN_LDAP_FORMAT))"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterMode 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterObjectclass person
+php /var/www/nextcloud/occ ldap:set-config s01 turnOnPasswordChange 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapCacheTTL 600
+php /var/www/nextcloud/occ ldap:set-config s01 ldapExperiencedAdmin 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGidNumber gidNumber
+# EDIT: list of application groups
+# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(objectclass=groupOfUniqueNames)(|(cn=friends)(cn=family)))"
+# EDIT: list of application groups
+# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterGroups "friends;family"
+# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterMode 0
+# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupDisplayName cn
+# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterObjectclass groupOfUniqueNames
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupMemberAssocAttr uniqueMember
+php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribute "mail"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilterEmail 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilterUsername 1
+php /var/www/nextcloud/occ ldap:set-config s01 ldapMatchingRuleInChainState unknown
+php /var/www/nextcloud/occ ldap:set-config s01 ldapNestedGroups 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapPagingSize 500
+php /var/www/nextcloud/occ ldap:set-config s01 ldapTLS 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserAvatarRule default
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserDisplayName displayname
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterMode 1
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUuidGroupAttribute auto
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUuidUserAttribute auto
+
 DFOE
 
 /root/permissions.sh
 
 su -s /bin/bash www-data <<EOF
 bash /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/config_nextcloud.sh
+if [ $NEXTCLOUD_LDAP ]; then
+  bash /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/setup_ldap.sh
+fi
+
 EOF
 
 #### Create file for high performance backend
