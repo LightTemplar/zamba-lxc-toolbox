@@ -418,7 +418,7 @@ php /var/www/nextcloud/occ db:add-missing-indices
 php /var/www/nextcloud/occ background:cron
 DFOE
 
-LXC_DOMAIN_LDAP_FORMAT = $(convert_domain_to_ldap_format "$LXC_DOMAIN")
+LXC_DOMAIN_LDAP_FORMAT=$(convert_domain_to_ldap_format "$LXC_DOMAIN")
 
 cat > /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/setup_ldap.sh << DFOE
 #!/bin/bash 
