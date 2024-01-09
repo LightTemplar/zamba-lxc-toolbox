@@ -18,7 +18,7 @@ for f in ${OPTIONAL_FEATURES[@]}; do
     if [[ LXC_TEMPLATE_VERSION == "debian-10-standard" ]] || [[ LXC_TEMPLATE_VERSION == "debian-11-standard" ]]; then
       apt-key adv --fetch-keys https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
       echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
-    if 
+    fi 
   elif [[ "$f" == "splitdns" ]]; then
     ADDITIONAL_PACKAGES="nginx-full $ADDITIONAL_PACKAGES"
     ADDITIONAL_SERVICES="nginx $ADDITIONAL_SERVICES"
