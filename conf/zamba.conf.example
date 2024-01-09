@@ -67,7 +67,7 @@ LXC_PWD='Start!123'
 LXC_AUTHORIZED_KEY=~/.ssh/authorized_keys
 
 # Define your (administrative) tools, you always want to have installed into your LXC container
-LXC_TOOLSET="vim htop net-tools dnsutils sysstat mc"
+LXC_TOOLSET="vim htop net-tools dnsutils sysstat mc lnav"
 
 # Define the local timezone of your LXC container (default: Euroe/Berlin)
 LXC_TIMEZONE="Europe/Berlin"

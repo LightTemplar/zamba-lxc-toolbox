@@ -475,7 +475,7 @@ DFOE
 
 su -s /bin/bash www-data <<EOF
 bash /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/config_nextcloud.sh
-if [ $NEXTCLOUD_LDAP ]; then
+if [ $NEXTCLOUD_LDAP == true ]; then
   bash /$LXC_SHAREFS_MOUNTPOINT/$NEXTCLOUD_DATA/setup_ldap.sh
 fi
 
