@@ -15,8 +15,10 @@ for f in ${OPTIONAL_FEATURES[@]}; do
   if [[ "$f" == "wsdd" ]]; then
     ADDITIONAL_PACKAGES="wsdd $ADDITIONAL_PACKAGES"
     ADDITIONAL_SERVICES="wsdd $ADDITIONAL_SERVICES"
-    apt-key adv --fetch-keys https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
-    echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
+    if [[ LXC_TEMPLATE_VERSION == "debian-10-standard" ]] || [[ LXC_TEMPLATE_VERSION == "debian-11-standard" ]]; then
+      apt-key adv --fetch-keys https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
+      echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
+    if 
   elif [[ "$f" == "splitdns" ]]; then
     ADDITIONAL_PACKAGES="nginx-full $ADDITIONAL_PACKAGES"
     ADDITIONAL_SERVICES="nginx $ADDITIONAL_SERVICES"
@@ -24,6 +26,11 @@ for f in ${OPTIONAL_FEATURES[@]}; do
     ZMB_DNS_BACKEND="BIND9_DLZ"
     ADDITIONAL_PACKAGES="bind9 $ADDITIONAL_PACKAGES"
     ADDITIONAL_SERVICES="bind9 $ADDITIONAL_SERVICES"
+  elif [[ "$f" == "webmin" ]]; then
+    ADDITIONAL_PACKAGES="webmin $ADDITIONAL_PACKAGES"
+    ADDITIONAL_SERVICES="webmin $ADDITIONAL_SERVICES"
+    curl -o setup-repos.sh https://raw.githubusercontent.com/webmin/webmin/master/setup-repos.sh
+    sh setup-repos.sh --force
   else
     echo "Unsupported optional feature $f"
   fi
