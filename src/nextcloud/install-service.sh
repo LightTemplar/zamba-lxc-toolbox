@@ -429,9 +429,9 @@ php /var/www/nextcloud/occ ldap:create-empty-config
 
 # EDIT: domain
 php /var/www/nextcloud/occ ldap:set-config s01 ldapHost "ldap://$NEXTCLOUD_LDAP_SERVER."
-php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 3890
+php /var/www/nextcloud/occ ldap:set-config s01 ldapPort 389
 # EDIT: admin user
-php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "uid=ro_admin,ou=people,$LXC_DOMAIN_LDAP_FORMAT"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentName "cn=ro admin,cn=Users,$LXC_DOMAIN_LDAP_FORMAT"
 # EDIT: password
 php /var/www/nextcloud/occ ldap:set-config s01 ldapAgentPassword "$NEXTCLOUD_LDAP_AGENT_PASSWORD"
 # EDIT: Base DN
@@ -441,7 +441,7 @@ php /var/www/nextcloud/occ ldap:set-config s01 ldapBaseGroups "$LXC_DOMAIN_LDAP_
 php /var/www/nextcloud/occ ldap:set-config s01 ldapConfigurationActive 1
 php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilter "(&(objectclass=person)(uid=%uid))"
 # EDIT: nextcloud_users group, contains the users who can login to Nextcloud
-php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(&(objectclass=person)(memberOf=cn=$NEXTCLOUD_LDAP_USERS_GROUP,ou=groups,$LXC_DOMAIN_LDAP_FORMAT))"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilter "(&(objectclass=person)(memberOf=cn=$NEXTCLOUD_LDAP_USERS_GROUP,$LXC_DOMAIN_LDAP_FORMAT))"
 php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterMode 0
 php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterObjectclass person
 php /var/www/nextcloud/occ ldap:set-config s01 turnOnPasswordChange 0
@@ -468,7 +468,7 @@ php /var/www/nextcloud/occ ldap:set-config s01 ldapUserDisplayName displayname
 php /var/www/nextcloud/occ ldap:set-config s01 ldapUserFilterMode 1
 php /var/www/nextcloud/occ ldap:set-config s01 ldapUuidGroupAttribute auto
 php /var/www/nextcloud/occ ldap:set-config s01 ldapUuidUserAttribute auto
-
+php /var/www/nextcloud/occ ldap:promote-group "$NEXTCLOUD_LDAP_ADMINS_GROUP"
 DFOE
 
 /root/permissions.sh

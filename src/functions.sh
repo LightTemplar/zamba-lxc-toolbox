@@ -28,3 +28,27 @@ convert_domain_to_ldap_format() {
 
     echo "$ldap_format"
 }
+
+add_line_under_section_to_conf() {
+    local conf_file="$1"
+    local match_section="$2"
+    local add_line="$3"
+    local temp_file="$(mktemp)"
+
+    # Check if the line already exists
+    if grep -qF -- "$add_line" "$conf_file"; then
+        echo "Line already exists in $conf_file."
+        return
+    fi
+
+    # Use awk to add the line under the [global] section
+    awk -v section="$match_section" -v newline="$add_line" '
+    $0 == section {print; print newline; next}
+    {print}
+    ' "$conf_file" > "$temp_file"
+
+    # Replace the original file with the modified file
+    mv "$temp_file" "$conf_file"
+    echo "Updated $conf_file"
+}
+

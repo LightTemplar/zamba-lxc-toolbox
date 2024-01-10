@@ -114,6 +114,8 @@ samba-tool domain provision --use-rfc2307 --realm=$ZMB_REALM --domain=$ZMB_DOMAI
 
 cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
 
+add_line_under_section_to_conf "/etc/samba/smb.conf" "[global]" "ldap server require strong auth = No"
+
 systemctl unmask samba-ad-dc
 systemctl enable samba-ad-dc
 systemctl restart samba-ad-dc $ADDITIONAL_SERVICES
