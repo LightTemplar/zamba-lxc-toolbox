@@ -144,10 +144,13 @@ NEXTCLOUD_DATA="nc_data"
 # Defines the trusted reverse proxy, which will enable the detection of source ip to fail2ban
 NEXTCLOUD_REVPROX="192.168.100.254"
 
-# LDAP part
+# LDAP part. Before Installing you should already create user under "Users" in LDAP tree. 
 NEXTCLOUD_LDAP=true
-NEXTCLOUD_LDAP_SERVER="zmb-ad.$LXC_DOMAIN"
-NEXTCLOUD_LDAP_AGENT_LOGIN="cn=ro admin,cn=Users,dc=zmb,dc=rocks"
+# all ldap values are case incensitive
+# only server name. Domain part will be added automatically
+NEXTCLOUD_LDAP_SERVER="zmb-ad"
+# Set here only first CN part. Generated DNs will be like "cn=%name%,cn=Users,dc=zmb,dc=rocks"
+NEXTCLOUD_LDAP_AGENT_LOGIN="ro admin"
 NEXTCLOUD_LDAP_AGENT_PASSWORD="Password123"
 NEXTCLOUD_LDAP_USERS_GROUP="Nextcloud Users"
 NEXTCLOUD_LDAP_ADMINS_GROUP="Nextcloud Admins"
