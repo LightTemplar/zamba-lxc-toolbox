@@ -452,12 +452,11 @@ php /var/www/nextcloud/occ ldap:set-config s01 ldapCacheTTL 600
 php /var/www/nextcloud/occ ldap:set-config s01 ldapExperiencedAdmin 0
 php /var/www/nextcloud/occ ldap:set-config s01 ldapGidNumber gidNumber
 # EDIT: list of application groups
-# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=group))(|(cn=$NEXTCLOUD_LDAP_ADMINS_GROUP)(cn=$NEXTCLOUD_LDAP_USERS_GROUP)))"
-# EDIT: list of application groups
-# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterGroups "$NEXTCLOUD_LDAP_ADMINS_GROUP;$NEXTCLOUD_LDAP_USERS_GROUP"
-# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterMode 0
-# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupDisplayName cn
-# php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterObjectclass group
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilter "(&(|(objectclass=group))(|(cn=$NEXTCLOUD_LDAP_ADMINS_GROUP)(cn=$NEXTCLOUD_LDAP_USERS_GROUP)))"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterGroups "$NEXTCLOUD_LDAP_ADMINS_GROUP;$NEXTCLOUD_LDAP_USERS_GROUP"
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterMode 0
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupDisplayName cn
+php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupFilterObjectclass group
 php /var/www/nextcloud/occ ldap:set-config s01 ldapGroupMemberAssocAttr Member
 php /var/www/nextcloud/occ ldap:set-config s01 ldapEmailAttribute "mail"
 php /var/www/nextcloud/occ ldap:set-config s01 ldapLoginFilterEmail 0
