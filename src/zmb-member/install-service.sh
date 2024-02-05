@@ -10,8 +10,10 @@ source /root/zamba.conf
 source /root/constants-service.conf
 
 # add wsdd package repo
-apt-key adv --fetch-keys https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
-echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
+if [[ LXC_TEMPLATE_VERSION == "debian-10-standard" ]] || [[ LXC_TEMPLATE_VERSION == "debian-11-standard" ]]; then
+	apt-key adv --fetch-keys https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key
+	echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
+fi 
 echo "deb http://ftp.de.debian.org/debian $(lsb_release -cs)-backports main contrib" > /etc/apt/sources.list.d/$(lsb_release -cs)-backports.list
 
 apt update
