@@ -17,14 +17,14 @@ echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" 
 
 apt update
 
-DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install --no-install-recommends -y -qq postgresql nginx git ssl-cert unzip zip
+DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install --no-install-recommends -y -qq postgresql-${GITEA_DB_VERSION} nginx git ssl-cert unzip zip
 
 systemctl enable --now postgresql
 
 su - postgres <<EOF
-psql -c "CREATE USER gitea WITH PASSWORD '${GITEA_DB_PWD}';"
-psql -c "CREATE DATABASE ${GITEA_DB_NAME} ENCODING UTF8 TEMPLATE template0 OWNER ${GITEA_DB_USR};"
-echo "Postgres User ${GITEA_DB_USR} and database ${GITEA_DB_NAME} created."
+psql -c "CREATE USER ${GITEA_DB_USER} WITH PASSWORD '${GITEA_DB_PWD}';"
+psql -c "CREATE DATABASE ${GITEA_DB_NAME} ENCODING UTF8 TEMPLATE template0 OWNER ${GITEA_DB_USER};"
+echo "Postgres User ${GITEA_DB_USER} and database ${GITEA_DB_NAME} created."
 EOF
 
 adduser  --system  --shell /bin/bash --gecos 'Git Version Control' --group --disabled-password --home /home/git git
@@ -100,7 +100,7 @@ TEMP_PATH = /${LXC_SHAREFS_MOUNTPOINT}/gitea/uploads
 DB_TYPE=postgres
 HOST=localhost
 NAME=${GITEA_DB_NAME}
-USER=${GITEA_DB_USR}
+USER=${GITEA_DB_USER}
 PASSWD=${GITEA_DB_PWD}
 SSL_MODE=disable
 
