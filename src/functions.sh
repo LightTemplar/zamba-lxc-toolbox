@@ -52,3 +52,9 @@ add_line_under_section_to_conf() {
     echo "Updated $conf_file"
 }
 
+set_conf_variable() {
+  local file_path=$1
+  local variable_name=$2
+  local new_value=$3
+  sed -i "s/^\($variable_name\s*=\s*\).*\$/\1$new_value/" "$file_path"
+}
