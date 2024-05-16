@@ -18,7 +18,7 @@ echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" 
 apt update
 
 DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt -y -qq dist-upgrade
-DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt -y -qq install --no-install-recommends postgresql nginx php7.4-pgsql php7.4-fpm zabbix-server-pgsql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent ssl-cert
+DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt -y -qq install --no-install-recommends postgresql nginx php7.4-pgsql php7.4-fpm zabbix-server-pgsql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent ssl-cert snmp openipmi
 
 unlink /etc/nginx/sites-enabled/default
 
@@ -220,7 +220,11 @@ sed -i "s/false/true/g" /usr/share/zabbix/include/locales.inc.php
 
 zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | sudo -u zabbix psql ${ZABBIX_DB_NAME}
 
-echo "DBPassword=${ZABBIX_DB_PWD}" >> /etc/zabbix/zabbix_server.conf
+cat << EOF >> /etc/zabbix/zabbix_server.conf
+DBPassword=${ZABBIX_DB_PWD}
+StartIPMIPollers=3
+EOF
+
 
 openssl dhparam -out /etc/nginx/dhparam.pem 4096
 
