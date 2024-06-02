@@ -206,3 +206,12 @@ VW_SMTP_USERNAME=vaultwarden@bashclub.org
 
 # password of your mailbox
 VW_SMTP_PASSWORD='<yourEmailPassword>'
+
+############### Docker-compose-Git-Section ###############
+
+# Copy ssh keys from conf/ssh/*
+# Recommend to put there also known_hosts
+LXC_COPY_SSH="0"
+
+
+LXC_GIT_REPO_URL="ssh://git@github.com/owner/repo.git"

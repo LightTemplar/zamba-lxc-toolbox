@@ -166,6 +166,10 @@ pct push $LXC_NBR "$PWD/src/lxc-base.sh" /root/lxc-base.sh
 pct push $LXC_NBR "$PWD/src/$service/install-service.sh" /root/install-service.sh
 pct push $LXC_NBR "$PWD/src/$service/constants-service.conf" /root/constants-service.conf
 
+if [ $LXC_COPY_SSH -gt 0 ]; then
+  push_to_container $LXC_NBR "$PWD/conf/ssh/*" /root/.ssh
+fi
+
 if [ $debug -gt 0 ]; then dbg=-vx; else dbg=""; fi
 
 echo "============ Installing basic container setup... ============"
