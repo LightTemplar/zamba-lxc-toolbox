@@ -4,9 +4,15 @@
 # (C) 2021 Idea an concept by Christian Zengel <christian@sysops.de>
 # (C) 2021 Script design and prototype by Markus Helmke <m.helmke@nettwarker.de>
 # (C) 2021 Script rework and documentation by Thorsten Spille <thorsten@spille-edv.de>
+# (C) 2024 Script enhancing by Light Templar
 
 source /root/zamba.conf
 source /root/constants-service.conf
+
+# disabling IPv6
+cat > /etc/sysctl.d/01-disable-ipv6.conf <<EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+EOF
 
 # Download the Docker installation script
 curl -fsSL get.docker.com -o get-docker.sh
