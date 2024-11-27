@@ -15,10 +15,11 @@ if [[ LXC_TEMPLATE_VERSION == "debian-10-standard" ]] || [[ LXC_TEMPLATE_VERSION
 	echo "deb https://pkg.ltec.ch/public/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/wsdd.list
 fi 
 echo "deb http://ftp.de.debian.org/debian $(lsb_release -cs)-backports main contrib" > /etc/apt/sources.list.d/$(lsb_release -cs)-backports.list
-
+# echo "deb http://ftp.halifax.rwth-aachen.de/debian/ bookworm-backports main contrib" >> /etc/apt/sources.list
 apt update
 
-DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -t $(lsb_release -cs)-backports acl samba winbind libpam-winbind libnss-winbind krb5-user krb5-config samba-dsdb-modules samba-vfs-modules wsdd
+#DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -t bookworm-backports -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" acl samba winbind libpam-winbind libnss-winbind krb5-user krb5-config samba-dsdb-modules samba-vfs-modules wsdd
+DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" acl samba winbind libpam-winbind libnss-winbind krb5-user krb5-config samba-dsdb-modules samba-vfs-modules wsdd
 
 mv /etc/krb5.conf /etc/krb5.conf.bak
 cat > /etc/krb5.conf <<EOF
@@ -100,7 +101,7 @@ systemctl restart winbind nmbd
 wbinfo -u
 wbinfo -g
 
-mkdir /$LXC_SHAREFS_MOUNTPOINT/$ZMB_SHARE
+mkdir -p /$LXC_SHAREFS_MOUNTPOINT/$ZMB_SHARE
 
 # originally 'domain users' was set, added variable for domain admins group, samba wiki recommends separate group e.g. 'unix admins'
 chown "${ZMB_ADMIN_USER@L}" /$LXC_SHAREFS_MOUNTPOINT/$ZMB_SHARE

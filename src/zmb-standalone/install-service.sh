@@ -39,7 +39,9 @@ EOF
 
 apt update
 
-DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" -t $(lsb_release -cs)-backports acl samba samba-common samba-common-bin samba-dsdb-modules samba-vfs-modules samba-libs libwbclient0 winbind wsdd
+#DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -t bookworm-backports -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" acl samba samba-common samba-common-bin samba-dsdb-modules samba-vfs-modules samba-libs libwbclient0 winbind wsdd
+#DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -t bookworm-backports -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" --no-install-recommends cockpit cockpit-identities cockpit-file-sharing cockpit-navigator
+DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" acl samba samba-common samba-common-bin samba-dsdb-modules samba-vfs-modules samba-libs libwbclient0 winbind wsdd
 DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt install -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" --no-install-recommends cockpit cockpit-identities cockpit-file-sharing cockpit-navigator
 
 USER=$(echo "$ZMB_ADMIN_USER" | awk '{print tolower($0)}')
