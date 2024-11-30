@@ -113,6 +113,15 @@ ZMB_ADMIN_PASS='Start!123'
 # Defines the name of your Zamba share
 ZMB_SHARE="share"
 
+############### Docker-compose-Git-Section ###############
+
+# Copy ssh keys from conf/ssh/*
+# Recommend to put there also known_hosts
+LXC_COPY_SSH="0"
+
+# it will clone repo from URL, using ssh keys, copied from host
+LXC_GIT_REPO_URL="ssh://git@github.com/owner/repo.git"
+
 ############### Mailpiler-Section ###############
 
 PILER_BRANCH=release
